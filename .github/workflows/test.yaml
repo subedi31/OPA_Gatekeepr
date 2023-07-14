@@ -24,8 +24,8 @@ jobs:
     steps:
       - name: Install Helm
         run: |
-        helm repo add gatekeeper https://open-policy-agent.github.io/gatekeeper/charts
-        helm install gatekeeper/gatekeeper --name-template=gatekeeper --namespace gatekeeper-system --create-namespace
+         helm repo add gatekeeper https://open-policy-agent.github.io/gatekeeper/charts
+         helm install gatekeeper/gatekeeper --name-template=gatekeeper --namespace gatekeeper-system --create-namespace
             
           
 
