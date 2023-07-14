@@ -11,16 +11,10 @@ jobs1:
 
     steps:
       - name: Start minikube
-        run: |
-          curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
-          sudo install minikube-linux-amd64 /usr/local/bin/minikube
-          minikube start
+        uses: medyagh/setup-minikube@master
 
-      - name: Configure kubectl
-        run: |
-          minikube kubectl -- get pods --all-namespaces
 
-      - name: List Pods
+      - name: Try the cluster
         run: |
           minikube kubectl -- get pods
 
