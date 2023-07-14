@@ -6,7 +6,7 @@ on:
       - test
 
 jobs:
-  job1:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -16,7 +16,7 @@ jobs:
 
       - name: List Pods
         run: |
-          minikube kubectl -- get pods --all-namespaces
+          minikube kubectl -- get pods -n default
  
 
       
