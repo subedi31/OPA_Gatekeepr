@@ -13,13 +13,14 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v2
 
+      - name: Set up kubectl
+        uses: azure/setup-kubectl@v1
+
       - name: Apply Kubernetes templates
-        run: |
-          kubectl apply -f Templates/
+        run: kubectl apply -f Templates/
 
       - name: Apply Kubernetes constraints
-        run: |
-          kubectl apply -f Constraints/
+        run: kubectl apply -f Constraints/
 
       - name: Test policies
         run: |
@@ -30,4 +31,5 @@ jobs:
         run: |
           kubectl delete -f Templates/
           kubectl delete -f Constraints/
+
 
