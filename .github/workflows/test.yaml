@@ -25,7 +25,7 @@ jobs:
     steps:
       - name: Debug Cluster Connectivity
         run: |
-          kubectl cluster-info
+          kubectl cluster-info dump 
           kubectl get nodes
 
       - name: Install OPA Gatekeeper 
