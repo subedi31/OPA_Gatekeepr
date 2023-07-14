@@ -16,8 +16,8 @@ jobs:
 
       - name: List Pods
         run: |
-          minikube kubectl -- get pods
-
+          minikube kubectl -- get pods --all-namespaces
+ 
 
       
 
