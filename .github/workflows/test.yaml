@@ -10,9 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Set up Minikube
-        uses: hypnoglow/setup-minikube@v1
-
+      
       - name: Check out code
         uses: actions/checkout@v2
 
