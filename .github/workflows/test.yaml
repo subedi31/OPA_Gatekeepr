@@ -13,6 +13,7 @@ jobs:
       - name: Set up Minikube
         uses: medyagh/setup-minikube@master
 
+
       - name: Configure kubectl
         run: |
           minikube kubectl -- get pods --all-namespaces
@@ -21,13 +22,17 @@ jobs:
     needs: setup-minikube
     runs-on: ubuntu-latest
 
-    steps:     
-      
+    steps:
+      - name: Debug Cluster Connectivity
+        run: |
+          kubectl cluster-info
+          kubectl get nodes
 
       - name: Install OPA Gatekeeper 
         run: |
           helm repo add gatekeeper https://open-policy-agent.github.io/gatekeeper/charts
           helm install gatekeeper/gatekeeper --name-template=gatekeeper --namespace gatekeeper-system --create-namespace
+
      
           
 
