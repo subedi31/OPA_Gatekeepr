@@ -8,47 +8,58 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        shell: bash
 
     steps:
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: 16
+      - name: Set up Minikube
+        run: |
+          curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+          sudo install minikube-linux-amd64 /usr/local/bin/minikube
+
+      - name: Start Minikube
+        run: |
+          minikube start --driver=docker --kubernetes-version=v1.22.0
 
       - name: Check out code
         uses: actions/checkout@v2
-        with:
-          ref: test
 
-      - name: Set up kubectl
+      - name: Apply OPA Gatekeeper
         run: |
-          sudo apt-get update
-          sudo apt-get install -y apt-transport-https ca-certificates curl
-          sudo curl -fsSLo /usr/share/keyrings/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg
-          echo "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
-          sudo apt-get update
-          sudo apt-get install -y kubectl
+          kubectl apply -f https://raw.githubusercontent.com/open-policy-agent/gatekeeper/v3.5.0/deploy/gatekeeper.yaml
 
-      - name: Apply Kubernetes templates
-        run: |
-          kubectl apply -f Templates/
-
-      - name: Apply Kubernetes constraints
+      - name: Apply OPA Gatekeeper Constraints
         run: |
           kubectl apply -f Constraints/
 
-      - name: Test policies
+      - name: Apply OPA Gatekeeper Templates
         run: |
-          kubectl get pods --all-namespaces
-          kubectl get deployments --all-namespaces
+          kubectl apply -f Templates/
+
+      - name: Apply OPA Gatekeeper Examples 
+        run: |
+          kubectl apply -f Examples/
+
+      
+      - name: Wait for OPA Gatekeeper to be ready
+        run: |
+          kubectl wait --for=condition=Available --timeout=300s deployment/gatekeeper-controller-manager -n gatekeeper-system
+
+      - name: Test OPA Gatekeeper Policies
+        run: |
+          # Perform tests on the applied examples, e.g., using kubectl or other relevant tools
+          # Example: kubectl get pods --all-namespaces
 
       - name: Cleanup
         run: |
+          kubectl delete -f Examples/bad/
+          kubectl delete -f Examples/good/
           kubectl delete -f Templates/
           kubectl delete -f Constraints/
+          kubectl delete -f https://raw.githubusercontent.com/open-policy-agent/gatekeeper/v3.5.0/deploy/gatekeeper.yaml
+
+      - name: Stop Minikube
+        run: |
+          minikube stop
+
 
 
 
