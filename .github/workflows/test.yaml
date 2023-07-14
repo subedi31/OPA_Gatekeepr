@@ -1,4 +1,4 @@
-name: Minikube Workflow
+name: OPA Gatekeeper
 
 on:
   push:
@@ -6,33 +6,27 @@ on:
       - test
 
 jobs:
-  deploy:
+  setup-minikube:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
-      - name: Start minikube
+      - name: Set up Minikube
         uses: medyagh/setup-minikube@master
 
-      - name: List Pods
+      - name: Configure kubectl
         run: |
-          minikube kubectl -- get pods -n default
- 
+          minikube kubectl -- get pods --all-namespaces
 
-      
+  install-opa:
+    needs: setup-minikube
+    runs-on: ubuntu-latest
 
-
-
-
-     
-
-
-      
+    steps:
+      - name: Install Helm
+        run: |
+        helm repo add gatekeeper https://open-policy-agent.github.io/gatekeeper/charts
+        helm install gatekeeper/gatekeeper --name-template=gatekeeper --namespace gatekeeper-system --create-namespace
+            
           
-
-      
-
-
-
 
 
