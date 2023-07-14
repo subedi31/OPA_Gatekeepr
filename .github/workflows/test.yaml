@@ -21,14 +21,14 @@ jobs:
     needs: setup-minikube
     runs-on: ubuntu-latest
 
-    steps:
+    steps:    
       
 
       - name: Install OPA Gatekeeper
         run: |
           helm repo add gatekeeper https://open-policy-agent.github.io/gatekeeper/charts
           helm install gatekeeper/gatekeeper --name-template=gatekeeper --namespace gatekeeper-system --create-namespace
-          
+     
           
 
 
