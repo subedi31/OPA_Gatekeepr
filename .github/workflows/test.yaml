@@ -24,9 +24,20 @@ jobs:
     steps:
       - name: Install Helm
         run: |
-         helm repo add gatekeeper https://open-policy-agent.github.io/gatekeeper/charts --force-update
-         helm install gatekeeper/gatekeeper --name-template=gatekeeper --namespace gatekeeper-system --create-namespace
-            
+          curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+
+      - name: Add Helm repository
+        run: |
+          helm repo add gatekeeper https://open-policy-agent.github.io/gatekeeper/charts
+
+      - name: Update Helm repositories
+        run: |
+          helm repo update
+
+      - name: Install OPA Gatekeeper
+        run: |
+          helm install gatekeeper/gatekeeper --name-template=gatekeeper --namespace gatekeeper-system --create-namespace
+
           
 
 
