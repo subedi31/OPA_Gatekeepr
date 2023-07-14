@@ -1,0 +1,35 @@
+name: OPA Gatekeeper Policies
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set up Minikube
+        uses: AppleGrew/setup-minikube@v1
+
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Apply Kubernetes templates
+        run: |
+          kubectl apply -f Templates/
+
+      - name: Apply Kubernetes constraints
+        run: |
+          kubectl apply -f Constraints/
+
+      - name: Test policies
+        run: |
+          kubectl get pods --all-namespaces
+          kubectl get deployments --all-namespaces
+
+      - name: Cleanup
+        run: |
+          kubectl delete -f Templates/
+          kubectl delete -f Constraints/
