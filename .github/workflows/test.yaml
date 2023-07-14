@@ -8,6 +8,9 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
 
     steps:
       - name: Check out code
@@ -15,12 +18,16 @@ jobs:
 
       - name: Set up kubectl
         uses: azure/setup-kubectl@v1
+        with:
+          install-kubectl: true
 
       - name: Apply Kubernetes templates
-        run: kubectl apply -f Templates/
+        run: |
+          kubectl apply -f Templates/
 
       - name: Apply Kubernetes constraints
-        run: kubectl apply -f Constraints/
+        run: |
+          kubectl apply -f Constraints/
 
       - name: Test policies
         run: |
@@ -31,5 +38,6 @@ jobs:
         run: |
           kubectl delete -f Templates/
           kubectl delete -f Constraints/
+
 
 
