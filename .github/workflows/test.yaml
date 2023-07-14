@@ -2,8 +2,8 @@ name: OPA Gatekeeper Policies
 
 on:
   push:
-    branches:
-      - test
+    branches: [test]
+      
 
 jobs:
   deploy:
