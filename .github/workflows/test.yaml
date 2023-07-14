@@ -20,7 +20,9 @@ jobs:
           minikube start --driver=docker --kubernetes-version=v1.22.0
 
       - name: Check out code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v1
+        with:
+          ref: test
 
       - name: Apply OPA Gatekeeper
         run: |
@@ -39,6 +41,7 @@ jobs:
           kubectl apply -f Examples/
 
       
+
       - name: Wait for OPA Gatekeeper to be ready
         run: |
           kubectl wait --for=condition=Available --timeout=300s deployment/gatekeeper-controller-manager -n gatekeeper-system
@@ -50,8 +53,8 @@ jobs:
 
       - name: Cleanup
         run: |
-          kubectl delete -f Examples/bad/
-          kubectl delete -f Examples/good/
+          
+          kubectl delete -f Examples
           kubectl delete -f Templates/
           kubectl delete -f Constraints/
           kubectl delete -f https://raw.githubusercontent.com/open-policy-agent/gatekeeper/v3.5.0/deploy/gatekeeper.yaml
