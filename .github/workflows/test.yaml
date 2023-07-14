@@ -3,7 +3,7 @@ name: OPA Gatekeeper
 on:
   push:
     branches:
-      - main
+      - test
 
 jobs:
   deploy:
