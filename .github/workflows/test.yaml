@@ -10,11 +10,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Set up Minikube
-        run: |
-          curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
-          sudo install minikube-linux-amd64 /usr/local/bin/minikube
-          minikube start
+      - uses: actions/checkout@v2
+      - name: Start minikube
+        uses: medyagh/setup-minikube@master
 
       - name: List Pods
         run: |
