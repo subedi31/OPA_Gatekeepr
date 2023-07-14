@@ -2,21 +2,18 @@ name: OPA Gatekeeper Policies
 
 on:
   push:
-    branches: [test]
-      
+    branches:
+      - test
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      
       - name: Check out code
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
         with:
           ref: test
-
-      
 
       - name: Apply OPA Gatekeeper Constraints
         run: |
@@ -26,9 +23,20 @@ jobs:
         run: |
           kubectl apply -f Templates/
 
-      - name: Apply OPA Gatekeeper Examples 
+      - name: Apply OPA Gatekeeper Examples
         run: |
           kubectl apply -f Examples/
+
+      - name: Wait for OPA Gatekeeper to be ready
+        run: |
+          kubectl wait --for=condition=Available --timeout=300s deployment/gatekeeper-controller-manager -n gatekeeper-system
+
+      - name: Cleanup
+        run: |
+          kubectl delete -f Examples/
+          kubectl delete -f Templates/
+          kubectl delete -f Constraints/
+
 
      
 
