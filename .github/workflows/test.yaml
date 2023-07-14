@@ -5,24 +5,17 @@ on:
     branches:
       - test
 
-jobs:
+jobs1:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Set up Minikube
-        run: |
-          curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
-          sudo install minikube-linux-amd64 /usr/local/bin/minikube
-          minikube start
+      - name: Start minikube
+        id: minikube
+        uses: medyagh/setup-minikube@master
 
-      - name: Configure kubectl
-        run: |
-          minikube kubectl -- get pods --all-namespaces
-
-      - name: List Pods
-        run: |
-          minikube kubectl -- get pods
+      - name: Try the cluster !
+        run: kubectl get pods -A 
 
 
 
