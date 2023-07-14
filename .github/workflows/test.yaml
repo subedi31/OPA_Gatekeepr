@@ -5,18 +5,20 @@ on:
     branches:
       - test
 
-jobs1:
+jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Start minikube
+      - name: Set up Minikube
         uses: medyagh/setup-minikube@master
 
-
-      - name: Try the cluster
+      - name: Configure kubectl
         run: |
-          minikube kubectl -- get pods
+          minikube kubectl -- get pods --all-namespaces
+
+      
+
 
 
 
