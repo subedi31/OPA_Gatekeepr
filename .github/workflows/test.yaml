@@ -1,41 +1,29 @@
-name: OPA Gatekeeper Policies
+name: OPA Gatekeeper
 
 on:
   push:
     branches:
-      - test
+      - main
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Check out code
-        uses: actions/checkout@v2
-        with:
-          ref: test
-
-      - name: Apply OPA Gatekeeper Constraints
+      - name: Set up Minikube
         run: |
-          kubectl apply -f Constraints/
+          curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+          sudo install minikube-linux-amd64 /usr/local/bin/minikube
+          minikube start
 
-      - name: Apply OPA Gatekeeper Templates
+      - name: Configure kubectl
         run: |
-          kubectl apply -f Templates/
+          minikube kubectl -- get pods --all-namespaces
 
-      - name: Apply OPA Gatekeeper Examples
+      - name: List Pods
         run: |
-          kubectl apply -f Examples/
+          minikube kubectl -- get pods
 
-      - name: Wait for OPA Gatekeeper to be ready
-        run: |
-          kubectl wait --for=condition=Available --timeout=300s deployment/gatekeeper-controller-manager -n gatekeeper-system
-
-      - name: Cleanup
-        run: |
-          kubectl delete -f Examples/
-          kubectl delete -f Templates/
-          kubectl delete -f Constraints/
 
 
      
