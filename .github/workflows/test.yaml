@@ -20,6 +20,8 @@ jobs:
 
       - name: Check out code
         uses: actions/checkout@v2
+        with:
+          ref: test
 
       - name: Set up kubectl
         run: |
@@ -47,6 +49,7 @@ jobs:
         run: |
           kubectl delete -f Templates/
           kubectl delete -f Constraints/
+
 
 
 
